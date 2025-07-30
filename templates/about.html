@@ -20,19 +20,20 @@
   </head>
 
   <body>
-    <!-- NAVBAR (reused from index.html) -->
+
+    <!-- NAVBAR -->
     <header class="navbar">
       <div class="nav-left">
-        <img src="logo-cropped.svg" alt="Green Cycle Drive Logo" class="logo" />
-        <h1>The Green Cycle Drive</h1>
+        <img src="/static/logo-cropped.svg" alt="Green Cycle Drive Logo" class="logo">
+        <a href="/" class="GCD_Heading"><h1>The Green Cycle Drive</h1></a>
       </div>
       <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="about.html" class="active">About Us</a>
-        <a href="events.html">Events</a>
-        <a href="team.html">Team</a>
-        <a href="get-involved.html">Get Involved</a>
-        <a href="contact.html">Contact Us</a>
+        <a href="/">Home</a>
+        <a href="{{ url_for('about') }}">About Us</a>
+        <a href="{{ url_for('events') }}">Events</a>
+        <a href="{{ url_for('team') }}">Team</a>
+        <a href="{{ url_for('get_involved') }}">Get Involved</a>
+        <a href="#foot">Contact Us</a>
         <img
           src="https://avatars.githubusercontent.com/u/583231?v=4"
           class="profile-icon"

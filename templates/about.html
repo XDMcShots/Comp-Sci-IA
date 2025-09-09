@@ -20,11 +20,14 @@
   </head>
 
   <body>
-
     <!-- NAVBAR -->
     <header class="navbar">
       <div class="nav-left">
-        <img src="/static/logo-cropped.svg" alt="Green Cycle Drive Logo" class="logo">
+        <img
+          src="/static/logo-cropped.svg"
+          alt="Green Cycle Drive Logo"
+          class="logo"
+        />
         <a href="/" class="GCD_Heading"><h1>The Green Cycle Drive</h1></a>
       </div>
       <nav class="nav-links">
@@ -34,11 +37,13 @@
         <a href="{{ url_for('team') }}">Team</a>
         <a href="{{ url_for('get_involved') }}">Get Involved</a>
         <a href="#foot">Contact Us</a>
-        <img
-          src="https://avatars.githubusercontent.com/u/583231?v=4"
-          class="profile-icon"
-          alt="Profile Picture"
-        />
+        <a href="{{ url_for('login') }}">
+          <img
+            src="https://avatars.githubusercontent.com/u/583231?v=4"
+            class="profile-icon"
+            alt="Profile Picture"
+          />
+        </a>
       </nav>
     </header>
 
@@ -127,7 +132,7 @@
     </section>
 
     <!-- FOOTER (reused from index.html) -->
-    <footer>
+    <footer id="foot">
       <div class="footer-container">
         <div class="footer-column">
           <h3><a href="index.html">Home</a></h3>

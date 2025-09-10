@@ -55,7 +55,7 @@
           We engage the youth in climate action, empowering them to influence
           their communities through hands-on environmental initiatives.
         </p>
-        <button>Our Events</button>
+        <button><a href="{{ url_for('about') }}">Our Events</a></button>
       </div>
     </section>
 
@@ -63,12 +63,11 @@
     <footer id="foot">
       <div class="footer-container">
         <div class="footer-column">
-          <h3><a href="#">Home</a></h3>
-          <p><a href="#">About</a></p>
-          <p><a href="#">Events</a></p>
-          <p><a href="#">Team</a></p>
-          <p><a href="#">Get Involved</a></p>
-          <p><a href="#">Contact Us</a></p>
+          <h3><a href="/">Home</a></h3>
+          <p><a href="{{ url_for('about') }}">About</a></p>
+          <p><a href="{{ url_for('events') }}">Events</a></p>
+          <p><a href="{{ url_for('team') }}">Team</a></p>
+          <p><a href="{{ url_for('get_involved') }}">Get Involved</a></p>
         </div>
         <div class="footer-column">
           <h3>Addresses</h3>
@@ -85,7 +84,7 @@
         <div class="footer-column">
           <h3>Stay Connected</h3>
           <p>For any queries or concerns</p>
-          <button>Send an Email</button>
+          <button><a href="get_involved">Send an Email</a></button>
         </div>
       </div>
       <div class="footer-note">

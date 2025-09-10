@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, session
-from datetime import timedelta
 import sqlite3
+from datetime import timedelta
+
 import bcrypt
+from flask import Flask, render_template, request, redirect, url_for, session
 
 app = Flask(__name__)
 app.secret_key = "supersecretkey"  # change this to something random

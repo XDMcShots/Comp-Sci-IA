@@ -16,7 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/static/styles.css" />
+    <link rel="stylesheet" href="styles.css" />
   </head>
 
   <body>
@@ -24,20 +24,22 @@
     <header class="navbar">
       <div class="nav-left">
         <img
-          src="/static/logo-cropped.svg"
+          src="assets/logo-cropped.svg"
           alt="Green Cycle Drive Logo"
           class="logo"
         />
-        <a href="/" class="GCD_Heading"><h1>The Green Cycle Drive</h1></a>
+        <a href="index.html" class="GCD_Heading">
+          <h1>The Green Cycle Drive</h1>
+        </a>
       </div>
       <nav class="nav-links">
-        <a href="/">Home</a>
-        <a href="{{ url_for('about') }}">About Us</a>
-        <a href="{{ url_for('events') }}">Events</a>
-        <a href="{{ url_for('team') }}">Team</a>
-        <a href="{{ url_for('get_involved') }}">Get Involved</a>
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="events.html">Events</a>
+        <a href="team.html">Team</a>
+        <a href="get_involved.html">Get Involved</a>
         <a href="#foot">Contact Us</a>
-        <a href="{{ url_for('login') }}">
+        <a href="login.html">
           <img
             src="https://avatars.githubusercontent.com/u/583231?v=4"
             class="profile-icon"
@@ -131,7 +133,7 @@
       </div>
     </section>
 
-    <!-- FOOTER (reused from index.html) -->
+    <!-- FOOTER -->
     <footer id="foot">
       <div class="footer-container">
         <div class="footer-column">
@@ -139,8 +141,7 @@
           <p><a href="about.html">About</a></p>
           <p><a href="events.html">Events</a></p>
           <p><a href="team.html">Team</a></p>
-          <p><a href="get-involved.html">Get Involved</a></p>
-          <p><a href="contact.html">Contact Us</a></p>
+          <p><a href="get_involved.html">Get Involved</a></p>
         </div>
         <div class="footer-column">
           <h3>Addresses</h3>
@@ -157,13 +158,17 @@
         <div class="footer-column">
           <h3>Stay Connected</h3>
           <p>For any queries or concerns</p>
-          <button>Send an Email</button>
+          <button><a href="get_involved.html">Send an Email</a></button>
         </div>
       </div>
       <div class="footer-note">
         <p>
           © 2025 Made with ❤️ by
-          <em>Swarit Kapoor</em>
+          <em
+            ><a href="https://xdmcshots.github.io/profile/"
+              >Swarit Kapoor</a
+            ></em
+          >
         </p>
       </div>
     </footer>

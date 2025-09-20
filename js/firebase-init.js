@@ -1,11 +1,9 @@
-require("dotenv").config();
-
-const API_KEY = process.env.API_KEY;
-const AUTH_DOMAIN = process.env.AUTH_DOMAIN;
-const PROJECT_ID = process.env.PROJECT_ID;
-const STORAGE_BUCKET = process.env.STORAGE_BUCKET;
-const MESSAGING_SENDER_ID = process.env.MESSAGING_SENDER_ID;
-const APPID = process.env.APPID;
+API_KEY = "AIzaSyADnUUKnmXg36Ln8Wr6q7O7CY05fAh0lUs";
+AUTH_DOMAIN = "green-cycle-drive-a674c.firebaseapp.com";
+PROJECT_ID = "green-cycle-drive-a674c";
+STORAGE_BUCKET = "green-cycle-drive-a674c.firebasestorage.app";
+MESSAGING_SENDER_ID = "328391968795";
+APPID = "1:328391968795:web:2f095fdd3937e309eb10be";
 
 const firebaseConfig = {
   apiKey: API_KEY,

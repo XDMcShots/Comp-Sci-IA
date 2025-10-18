@@ -8,61 +8,362 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
     <style>
+      /* --------- 🌿 GLOBAL STYLE --------- */
       body {
-        background: #f7f9fc;
-        font-family: system-ui, -apple-system, Segoe UI, Roboto;
+        background: linear-gradient(120deg, #e8f5e9, #f1f8e9);
+        font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto;
+        color: #2e7d32;
+        min-height: 100vh;
+      }
+
+      /* --------- 🌿 NAVBAR --------- */
+      .navbar {
+        background: #ffffffcc;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      }
+
+      .navbar .fw-bold {
+        font-size: 1.25rem;
+        color: #2e7d32;
+      }
+
+      .navbar button {
+        border-radius: 50px;
+        transition: all 0.3s ease;
+      }
+
+      .navbar button:hover {
+        background-color: #2e7d32;
+        color: white;
+      }
+
+      /* --------- 🌿 TITLES --------- */
+      h2 {
+        color: #1b5e20;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      /* --------- 🌿 EVENT CARDS --------- */
+      .card {
+        position: relative;
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background: #fff;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+      }
+
+      .card img {
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .card-body {
+        padding: 1.2rem;
+      }
+
+      .card-title {
+        font-weight: 600;
+        font-size: 1.15rem;
+        color: #1b5e20;
+      }
+
+      .card-text {
+        color: #4e4e4e;
+        font-size: 0.95rem;
+      }
+
+      /* --------- 🌿 ICON BUTTONS --------- */
+      .icon-btn {
+        background: #ffffffdd;
+        border: none;
+        color: #388e3c;
+        font-size: 1.1rem;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.25s ease, transform 0.25s ease;
+      }
+
+      .card:hover .icon-btn {
+        opacity: 1;
+      }
+
+      .icon-btn:hover {
+        background: #2e7d32;
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      .icon-delete:hover {
+        background: #c62828;
+      }
+
+      /* --------- 🌿 MODAL --------- */
+      .modal-content {
+        border-radius: 16px;
+        border: none;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      }
+
+      .modal-header {
+        background: #2e7d32;
+        color: #fff;
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+      }
+
+      .modal-footer .btn-success {
+        background: #2e7d32;
+        border: none;
+      }
+
+      .modal-footer .btn-success:hover {
+        background: #1b5e20;
+      }
+
+      /* --------- 🌿 SMALL DETAILS --------- */
+      .text-muted.small {
+        color: #388e3c !important;
+      }
+
+      footer {
+        text-align: center;
+        font-size: 0.8rem;
+        color: #388e3c;
+        margin-top: 30px;
+        opacity: 0.8;
       }
     </style>
   </head>
+
   <body>
     <!-- Navbar -->
-    <nav class="navbar bg-white border-bottom">
+    <nav class="navbar border-bottom">
       <div class="container d-flex justify-content-between align-items-center">
-        <span class="navbar-brand fw-bold">Green Cycle Drive — Admin</span>
-        <div class="d-flex gap-3 align-items-center">
-          <span id="who" class="small text-muted"></span>
-          <button class="btn btn-outline-secondary btn-sm" id="logoutBtn">
+        <span class="fw-bold">🌿 Green Cycle Drive — Admin</span>
+        <div class="d-flex align-items-center gap-2">
+          <span id="userEmail" class="text-muted small"></span>
+          <button class="btn btn-sm btn-outline-success" id="logoutBtn">
             Logout
           </button>
         </div>
       </div>
     </nav>
 
-    <!-- Main content -->
     <main class="container py-4">
-      <h3>Welcome to the Admin Dashboard</h3>
-      <p>This page is visible only when signed in.</p>
+      <h2>Manage Events</h2>
+      <div id="eventsGrid" class="row g-4"></div>
     </main>
 
-    <!-- Firebase SDKs -->
+    <footer>© 2025 Green Cycle Drive | Admin Portal</footer>
+
+    <!-- Edit Modal -->
+    <div
+      class="modal fade"
+      id="editModal"
+      tabindex="-1"
+      aria-labelledby="editModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModalLabel">Edit Event</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editForm">
+              <input type="hidden" id="editEventId" />
+              <div class="mb-2">
+                <label class="form-label">Title</label>
+                <input id="editTitle" class="form-control" required />
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Description</label>
+                <textarea
+                  id="editDescription"
+                  class="form-control"
+                  required
+                ></textarea>
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Date</label>
+                <input type="date" id="editDate" class="form-control" />
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Image URL (Drive / Imgur)</label>
+                <input id="editImage" class="form-control" />
+                <small class="text-muted"
+                  >Paste any Drive or Imgur link — it auto-converts!</small
+                >
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="button" class="btn btn-success" id="saveEditBtn">
+              Confirm Edit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase + Bootstrap JS -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-
-    <!-- Your Firebase init -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/firebase-init.js"></script>
 
-    <!-- Page-specific logic -->
     <script>
-      // Guard: redirect to login if not authenticated
-      document.addEventListener("DOMContentLoaded", () => {
-        auth.onAuthStateChanged((user) => {
-          if (!user) {
-            window.location.href = "login.html";
-          } else {
-            document.getElementById("who").textContent =
-              user.email || "Logged in";
+      const grid = document.getElementById("eventsGrid");
+
+      /* ---------- AUTH GUARD ---------- */
+      auth.onAuthStateChanged((user) => {
+        if (!user) window.location.href = "login.html";
+        else {
+          document.getElementById("userEmail").textContent = user.email;
+          loadEvents();
+        }
+      });
+
+      /* ---------- IMAGE CONVERTER ---------- */
+      function convertImageLink(url) {
+        if (!url) return "";
+
+        const imgurRegex = /imgur\.com\/(?:a\/|gallery\/)?([a-zA-Z0-9]+)/;
+        const imgurMatch = url.match(imgurRegex);
+        if (imgurMatch && imgurMatch[1]) {
+          return `https://i.imgur.com/${imgurMatch[1]}.jpg`;
+        }
+
+        return url;
+      }
+
+      /* ---------- LOAD EVENTS ---------- */
+      function loadEvents() {
+        db.collection("events").onSnapshot((snap) => {
+          grid.innerHTML = "";
+          if (snap.empty) {
+            grid.innerHTML = `<p class="text-center text-muted">No events found.</p>`;
+            return;
           }
+
+          snap.forEach((doc) => {
+            const e = doc.data();
+            grid.innerHTML += `
+              <div class="col-12 col-md-6 col-lg-4">
+                <div class="card">
+                  <div class="position-absolute top-0 end-0 p-2 d-flex gap-2">
+                    <button class="icon-btn" onclick="openEdit('${
+                      doc.id
+                    }')"><i class="bi bi-pencil-fill"></i></button>
+                    <button class="icon-btn icon-delete" onclick="deleteEvent('${
+                      doc.id
+                    }')"><i class="bi bi-trash-fill"></i></button>
+                  </div>
+                  <img src="${convertImageLink(
+                    e.image
+                  )}" onerror="this.src='https://via.placeholder.com/600x300?text=Event';" class="card-img-top" alt="Event image">
+                  <div class="card-body">
+                    <h5 class="card-title">${e.title}</h5>
+                    <p class="card-text">${e.description}</p>
+                  </div>
+                </div>
+              </div>`;
+          });
+        });
+      }
+
+      /* ---------- DELETE EVENT ---------- */
+      async function deleteEvent(id) {
+        const userInput = prompt(
+          "Type CONFIRM to permanently delete this event."
+        );
+        if (userInput === "CONFIRM") {
+          await db.collection("events").doc(id).delete();
+          alert("Event deleted successfully.");
+        } else if (userInput !== null) {
+          alert("Deletion cancelled.");
+        }
+      }
+
+      /* ---------- EDIT EVENT ---------- */
+      async function openEdit(id) {
+        const docSnap = await db.collection("events").doc(id).get();
+        if (!docSnap.exists) return alert("Event not found.");
+        const data = docSnap.data();
+        document.getElementById("editEventId").value = id;
+        document.getElementById("editTitle").value = data.title;
+        document.getElementById("editDescription").value = data.description;
+        document.getElementById("editDate").value = data.date || "";
+        document.getElementById("editImage").value = data.image || "";
+        new bootstrap.Modal(document.getElementById("editModal")).show();
+      }
+
+      /* ---------- SAVE EDIT ---------- */
+      document
+        .getElementById("saveEditBtn")
+        .addEventListener("click", async () => {
+          const id = document.getElementById("editEventId").value;
+          const updatedData = {
+            title: document.getElementById("editTitle").value.trim(),
+            description: document
+              .getElementById("editDescription")
+              .value.trim(),
+            date: document.getElementById("editDate").value,
+            image: convertImageLink(
+              document.getElementById("editImage").value.trim()
+            ),
+          };
+          await db.collection("events").doc(id).update(updatedData);
+          bootstrap.Modal.getInstance(
+            document.getElementById("editModal")
+          ).hide();
+          alert("Event updated successfully!");
         });
 
-        // Logout handler
-        document
-          .getElementById("logoutBtn")
-          .addEventListener("click", async () => {
-            await auth.signOut();
-            window.location.href = "index.html";
-          });
-      });
+      /* ---------- LOGOUT ---------- */
+      document
+        .getElementById("logoutBtn")
+        .addEventListener("click", async () => {
+          await auth.signOut();
+          window.location.href = "index.html";
+        });
     </script>
   </body>
 </html>

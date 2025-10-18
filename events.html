@@ -4,49 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Events | Green Cycle Drive</title>
+
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
-      crossorigin="anonymous"
     />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
       rel="stylesheet"
     />
+
     <link rel="stylesheet" href="styles.css" />
-    <style>
-      .event-box {
-        display: flex;
-        align-items: center;
-        gap: 2rem;
-        margin: 2rem 0;
-        padding: 2rem;
-        border-radius: 12px;
-        background: rgba(100, 200, 150, 0.15); /* transparent-ish green */
-      }
-
-      .event-box:nth-child(even) {
-        flex-direction: row-reverse;
-        background: rgba(100, 150, 200, 0.15); /* alternate color */
-      }
-
-      .event-img {
-        width: 40%;
-        border-radius: 10px;
-        object-fit: cover;
-      }
-
-      .event-content {
-        flex: 1;
-      }
-
-      .event-content h2 {
-        font-weight: 600;
-      }
-    </style>
   </head>
 
   <body>
@@ -79,60 +50,9 @@
       </nav>
     </header>
 
-    <!-- EVENTS SECTION -->
-    <main class="container my-5">
-      <h1 class="text-center mb-5">Our Events</h1>
-
-      <div class="event-box">
-        <img
-          src="https://picsum.photos/600/400?random=1"
-          alt="Event 1"
-          class="event-img"
-        />
-        <div class="event-content">
-          <h2>Tree Plantation Drive</h2>
-          <p>
-            Join us in planting trees across local communities to combat climate
-            change and spread awareness about green initiatives.
-          </p>
-          <p><strong>Date:</strong> August 15, 2025</p>
-          <p><strong>Location:</strong> Zabeel Park, Dubai</p>
-        </div>
-      </div>
-
-      <div class="event-box">
-        <img
-          src="https://picsum.photos/600/400?random=2"
-          alt="Event 2"
-          class="event-img"
-        />
-        <div class="event-content">
-          <h2>Beach Cleanup</h2>
-          <p>
-            A community-driven initiative to clean Jumeirah Beach, reduce
-            plastic waste, and protect marine life.
-          </p>
-          <p><strong>Date:</strong> September 10, 2025</p>
-          <p><strong>Location:</strong> Jumeirah Beach, Dubai</p>
-        </div>
-      </div>
-
-      <div class="event-box">
-        <img
-          src="https://picsum.photos/600/400?random=3"
-          alt="Event 3"
-          class="event-img"
-        />
-        <div class="event-content">
-          <h2>Recycling Workshop</h2>
-          <p>
-            Learn the importance of recycling and how to implement effective
-            recycling practices at home and school.
-          </p>
-          <p><strong>Date:</strong> October 5, 2025</p>
-          <p><strong>Location:</strong> GEMS Modern Academy, Dubai</p>
-        </div>
-      </div>
+    <!-- MAIN EVENTS SECTION -->
+    <main class="container">
+      <div id="eventsGrid" class="row g-4 justify-content-center"></div>
     </main>
 
     <!-- FOOTER -->
@@ -175,9 +95,74 @@
       </div>
     </footer>
 
+    <!-- 🌿 FIREBASE SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-init.js"></script>
+
+    <!-- 🌿 MAIN SCRIPT -->
+    <script>
+      const grid = document.getElementById("eventsGrid");
+
+      // Convert Imgur link → direct image
+      function convertImgurLink(url) {
+        if (!url) return "";
+        const match = url.match(/imgur\.com\/(?:a\/|gallery\/)?([a-zA-Z0-9]+)/);
+        if (match && match[1]) {
+          return `https://i.imgur.com/${match[1]}.jpg`;
+        }
+        return url;
+      }
+
+      // Load Events
+      function loadEvents() {
+        db.collection("events")
+          .orderBy("date", "desc")
+          .onSnapshot((snap) => {
+            grid.innerHTML = "";
+
+            if (snap.empty) {
+              grid.innerHTML =
+                '<p class="text-center text-muted">No events available at the moment.</p>';
+              return;
+            }
+
+            snap.forEach((doc) => {
+              const e = doc.data();
+
+              grid.innerHTML += `
+                <div class="col-12 col-md-6 col-lg-4">
+                  <div class="event-card h-100">
+                    <img
+                      src="${convertImgurLink(e.image)}"
+                      onerror="this.src='https://via.placeholder.com/600x300?text=Event';"
+                      alt="Event Image"
+                    >
+                    <div class="event-card-body">
+                      <h5 class="event-card-title">${
+                        e.title || "Untitled Event"
+                      }</h5>
+                      <p class="event-card-text">${
+                        e.description || "No description provided."
+                      }</p>
+                      ${
+                        e.date
+                          ? `<p class="event-card-date"><i class="bi bi-calendar-event"></i> ${e.date}</p>`
+                          : ""
+                      }
+                    </div>
+                  </div>
+                </div>`;
+            });
+          });
+      }
+
+      loadEvents();
+    </script>
+
+    <!-- BOOTSTRAP JS -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
       crossorigin="anonymous"
     ></script>
   </body>

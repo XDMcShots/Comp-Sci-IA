@@ -223,6 +223,14 @@
                   class="form-control"
                   required
                 ></textarea>
+                <button
+                  type="button"
+                  id="aiGenBtn"
+                  class="btn btn-outline-success"
+                  style="float: right; margin-top: 6px"
+                >
+                  Generate Description with AI
+                </button>
               </div>
               <div class="mb-3">
                 <label class="form-label">Date</label>
@@ -234,7 +242,7 @@
                   type="url"
                   id="newImage"
                   class="form-control"
-                  placeholder="https://..."
+                  placeholder="https://i.imgur.com/Ku8EcMX.jpeg"
                 />
               </div>
               <button type="submit" class="btn btn-success w-100">
@@ -292,11 +300,9 @@
                 <input type="date" id="editDate" class="form-control" />
               </div>
               <div class="mb-2">
-                <label class="form-label">Image URL (Drive / Imgur)</label>
+                <label class="form-label">Image URL</label>
                 <input id="editImage" class="form-control" />
-                <small class="text-muted"
-                  >Paste any Drive or Imgur link — it auto-converts!</small
-                >
+                <small class="text-muted">Paste the Imgur Link!</small>
               </div>
             </form>
           </div>
@@ -323,6 +329,45 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="js/firebase-init.js"></script>
+    <script type="module">
+      import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+
+      const genAI = new GoogleGenerativeAI("API_KEY_🤫");
+
+      document
+        .getElementById("aiGenBtn")
+        .addEventListener("click", async () => {
+          const title = document.getElementById("newTitle").value.trim();
+
+          if (!title) {
+            alert("Please enter the event title first.");
+            return;
+          }
+
+          try {
+            const model = genAI.getGenerativeModel({
+              model: "gemini-2.0-flash",
+            });
+
+            const prompt = `
+        Write a friendly event description for this sustainability event:
+        "${title}"
+        Tone: simple, inspirational, school-friendly.
+        Length: 2–3 sentences unless specified otherwise.
+        Do not provide multiple options or any additional text.
+        Do not add any rich text formatting.
+      `;
+
+            const result = await model.generateContent(prompt);
+            const text = await result.response.text();
+
+            document.getElementById("newDescription").value = text;
+          } catch (err) {
+            console.error(err);
+            alert("Error generating description. Check console.");
+          }
+        });
+    </script>
 
     <script>
       const grid = document.getElementById("eventsGrid");

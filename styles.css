@@ -274,3 +274,33 @@ main.container {
   transform: translateY(-6px) scale(1.02); /* small lift + gentle zoom */
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.14); /* richer shadow */
 }
+
+/* ♻️ Recycling Center Section */
+#recycling-section {
+  padding: 4rem 1rem;
+}
+
+#recycling-section h2 {
+  color: #2e7d32;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+#recycling-section p {
+  color: #444;
+}
+
+#recycling-section .btn-success {
+  border-radius: 30px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+#recycling-section .btn-success:hover {
+  background-color: #1b5e20;
+  transform: scale(1.05);
+}
+
+.map-container iframe {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}

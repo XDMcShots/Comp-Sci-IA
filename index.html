@@ -61,6 +61,186 @@
       </div>
     </section>
 
+    <!-- ♻️ Nearest Recycling Centers -->
+    <section id="recycling-section" class="container my-5 text-center">
+      <h2 class="mb-3">Find the Nearest Recycling Centers</h2>
+      <p class="text-muted mb-3">
+        We’ll use your browser’s location (once) to sort known centers by
+        distance.
+      </p>
+
+      <button id="findNearest" class="btn btn-success px-4 py-2 mb-3">
+        📍 Find My Nearest Centers
+      </button>
+
+      <div id="geoInfo" class="small text-muted mb-3"></div>
+      <div
+        id="output"
+        class="text-start mx-auto"
+        style="max-width: 680px"
+      ></div>
+
+      <!-- 🌍 Static Map Preview -->
+      <div id="mapEmbed" class="mt-4" style="display: none">
+        <iframe
+          id="mapIframe"
+          width="100%"
+          height="450"
+          style="border: none; border-radius: 12px"
+          loading="lazy"
+          allowfullscreen=""
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+    </section>
+
+    <script>
+      // ♻️ List of known recycling centers (with lat/lng from Google Maps links)
+      const centers = [
+        {
+          name: "Recycling Center 1",
+          lat: 25.103311079005238,
+          lng: 55.19990613956628,
+          link: "https://maps.app.goo.gl/LJ6nrmrNdusv9gBy7",
+        },
+        {
+          name: "Recycling Center 2",
+          lat: 25.14859559695376,
+          lng: 55.195777538071276,
+          link: "https://maps.app.goo.gl/ktXTUroeyhoPXUKB9",
+        },
+        {
+          name: "Recycling Center 3",
+          lat: 25.25156950245265357,
+          lng: 55.22778468769065,
+          link: "https://maps.app.goo.gl/cRNfy7gnDK7kugrj6",
+        },
+        {
+          name: "Recycling Center 4",
+          lat: 25.214240403926812,
+          lng: 55.27418991371639,
+          link: "https://maps.app.goo.gl/xK4iNUJHRijYgDg46",
+        },
+        {
+          name: "Recycling Center 5",
+          lat: 25.201014289250406,
+          lng: 55.380797583024076,
+          link: "https://maps.app.goo.gl/dsL9VcNtjGEeJyrG9",
+        },
+        {
+          name: "Recycling Center 6",
+          lat: 25.24358547383841,
+          lng: 55.305917041404726,
+          link: "https://maps.app.goo.gl/LManjmbT3tRmWmww8",
+        },
+        {
+          name: "Recycling Center 7",
+          lat: 25.290023688348615,
+          lng: 55.38041970945234,
+          link: "https://maps.app.goo.gl/RN8GmehzJTKPp7YL7",
+        },
+        {
+          name: "Recycling Center 8",
+          lat: 25.219332684707943,
+          lng: 55.41900132631188,
+          link: "https://maps.app.goo.gl/qcpUzwT1bsnKMmt2A",
+        },
+      ];
+      function haversine(lat1, lon1, lat2, lon2) {
+        const toRad = (d) => (d * Math.PI) / 180;
+        const R = 6371;
+        const dLat = toRad(lat2 - lat1);
+        const dLon = toRad(lon2 - lon1);
+        const a =
+          Math.sin(dLat / 2) ** 2 +
+          Math.cos(toRad(lat1)) *
+            Math.cos(toRad(lat2)) *
+            Math.sin(dLon / 2) ** 2;
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      }
+
+      function fmtAcc(m) {
+        if (!m) return "";
+        return m < 1000 ? `${Math.round(m)} m` : `${(m / 1000).toFixed(2)} km`;
+      }
+
+      document.getElementById("findNearest").addEventListener("click", () => {
+        const out = document.getElementById("output");
+        const info = document.getElementById("geoInfo");
+        const mapDiv = document.getElementById("mapEmbed");
+        const mapIframe = document.getElementById("mapIframe");
+
+        out.innerHTML = "";
+        info.textContent = "Requesting precise location…";
+        mapDiv.style.display = "none";
+
+        if (!navigator.geolocation) {
+          info.textContent = "Geolocation not supported.";
+          return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const { latitude: lat, longitude: lon, accuracy } = pos.coords;
+            info.innerHTML = `
+          Your location: <strong>${lat.toFixed(5)}, ${lon.toFixed(5)}</strong> •
+          Accuracy: <strong>${fmtAcc(accuracy)}</strong>
+        `;
+
+            const ranked = centers
+              .map((c) => ({
+                ...c,
+                distanceKm: haversine(lat, lon, c.lat, c.lng),
+              }))
+              .sort((a, b) => a.distanceKm - b.distanceKm);
+
+            const top = ranked.slice(0, 5);
+            out.innerHTML = `
+          <h5 class="mb-3 text-success">Nearest Recycling Centers</h5>
+          ${top
+            .map(
+              (c, i) => `
+            <div class="card shadow-sm mb-3" style="border-radius:12px;">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <div class="fw-semibold">${i + 1}. ${c.name}</div>
+                  </div>
+                  <div class="text-success fw-semibold">${c.distanceKm.toFixed(
+                    2
+                  )} km</div>
+                </div>
+                <a href="${
+                  c.link
+                }" target="_blank" class="mt-2 d-inline-block">🔗 Open in Google Maps</a>
+              </div>
+            </div>
+          `
+            )
+            .join("")}
+        `;
+
+            // 🌍 Center the embedded map around user location
+            const query = encodeURIComponent(`${lat},${lon}`);
+            mapIframe.src = `https://www.google.com/maps?q=${query}&output=embed`;
+            mapDiv.style.display = "block";
+          },
+          (err) => {
+            const messages = {
+              1: "You denied the location request.",
+              2: "Position unavailable.",
+              3: "Request timed out.",
+            };
+            info.textContent = "";
+            out.innerHTML = `<div class="text-danger">${
+              messages[err.code] || "Unknown error."
+            }</div>`;
+          },
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+      });
+    </script>
+
     <!-- FOOTER -->
     <footer id="foot">
       <div class="footer-container">
